@@ -223,5 +223,19 @@
       "searchStrings":[
          "yourbtc.net"
       ]
+   },
+   {
+      "poolName":"nodeStratum",
+      "url":"",
+      "searchStrings":[
+         "nodeStratum"
+      ]
+   },
+   {
+      "poolName":"yaamp",
+      "url":"http://www.yaamp.com/",
+      "searchStrings":[
+         "yaamp"
+      ]
    }
 ]
