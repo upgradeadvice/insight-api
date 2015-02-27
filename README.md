@@ -1,31 +1,40 @@
-# *insight API*
+# *MUE insight API*
 
-*insight API* is an open-source bitcoin blockchain REST
+Please direct all support questions to [upgradeadvice](https://github.com/upgradeadvice)
+
+Note: On disk .dat block sync doesn't work at the moment. Fall back to rpc based sync.
+
+Start with:
+```
+BITCOIND_PORT=29947 BITCOIND_USER=monetaryunitrpc BITCOIND_PASS=rpcpass INSIGHT_NETWORK=livenet BITCOIND_P2P_PORT=29948 npm start
+```
+
+*MUE insight API* is an open-source MonetaryUnit blockchain REST
 and websocket API. Insight API runs in NodeJS and uses LevelDB for storage. 
 
 This is a backend-only service. If you're looking for the web frontend application,
-take a look at https://github.com/bitpay/insight.
+take a look at https://github.com/upgradeadvice/insight.
 
 *Insight API* allows to develop bitcoin-related applications (such as wallets) that 
-require certain information from the blockchain that bitcoind does not provide.
+require certain information from the blockchain that monetaryunitd does not provide.
 
 A blockchain explorer front-end has been developed on top of *Insight API*. It can
-be downloaded at [Github Insight Repository](https://github.com/bitpay/insight).
+be downloaded at [Github Insight Repository](https://github.com/upgradeadvice/insight).
 
 
 ## Prerequisites
 
-* **bitcoind** - Download and Install [Bitcoin](http://bitcoin.org/en/download)
+* **monetaryunitd** - Download and Install [MonetaryUnit](https://github.com/MonetaryUnit/MUE-Src)
 
-*insight API* needs a *trusted* bitcoind node to run. *insight API* will connect to the node
-through the RPC API, bitcoin peer-to-peer protocol, and will even read its raw block .dat files for syncing.
+*MUE insight API* needs a *trusted* monetaryunitd node to run. *MUE insight API* will connect to the node
+through the RPC API, monetaryunit peer-to-peer protocol, and will even read its raw block .dat files for syncing.
 
-Configure bitcoind to listen to RPC calls and set `txindex` to true.
+Configure monetaryunitd to listen to RPC calls and set `txindex` to true.
 The easiest way to do this is by copying `./etc/bitcoind/bitcoin.conf` to your
-bitcoin data directory (usually `~/.bitcoin` on Linux, `%appdata%\Bitcoin\` on Windows,
-or `~/Library/Application Support/Bitcoin` on Mac OS X).
+bitcoin data directory (usually `~/.monetaryunit` on Linux, `%appdata%\monetaryunit\` on Windows,
+or `~/Library/Application Support/monetaryunit` on Mac OS X).
 
-bitcoind must be running and must have finished downloading the blockchain **before** running *insight API*.
+monetaryunitd must be running and must have finished downloading the blockchain **before** running *MUE insight API*.
 
 
 * **Node.js v0.10.x** - Download and Install [Node.js](http://www.nodejs.org/download/).
@@ -35,9 +44,9 @@ bitcoind must be running and must have finished downloading the blockchain **bef
 ## Quick Install
   Check the Prerequisites section above before installing.
 
-  To install Insight API, clone the main repository:
+  To install MUE Insight API, clone the main repository:
 
-    $ git clone https://github.com/bitpay/insight-api && cd insight-api
+    $ git clone https://github.com/upgradeadvice/insight-api && cd insight-api
 
   Install dependencies:
 
@@ -67,7 +76,7 @@ BITCOIND_P2P_HOST     # P2P bitcoind Host (will default to BITCOIND_HOST, if spe
 BITCOIND_P2P_PORT     # P2P bitcoind Port
 BITCOIND_USER         # RPC username
 BITCOIND_PASS         # RPC password
-BITCOIND_DATADIR      # bitcoind datadir. 'testnet3' will be appended automatically if testnet is used. NEED to finish with '/'. e.g: `/vol/data/`
+BITCOIND_DATADIR      # monetaryunitd datadir. 'testnet3' will be appended automatically if testnet is used. NEED to finish with '/'. e.g: `/vol/data/`
 INSIGHT_NETWORK [= 'livenet' | 'testnet']
 INSIGHT_PORT          # insight api port
 INSIGHT_DB            # Path where to store insight's internal DB. (defaults to $HOME/.insight)
@@ -81,22 +90,22 @@ ENABLE_RATELIMITER # if "true" will enable the ratelimiter plugin
 LOGGER_LEVEL # defaults to 'info', can be 'debug','verbose','error', etc.
 ENABLE_HTTPS # if "true" it will server using SSL/HTTPS
 ENABLE_EMAILSTORE # if "true" will enable a plugin to store data with a validated email address
-INSIGHT_EMAIL_CONFIRM_HOST # Only meanfull if ENABLE_EMAILSTORE is enable. Hostname for the confirm URLs. E.g: 'https://insight.bitpay.com'
+INSIGHT_EMAIL_CONFIRM_HOST # Only meanfull if ENABLE_EMAILSTORE is enable. Hostname for the confirm URLs. 
 
 ```
 
-Make sure that bitcoind is configured to [accept incoming connections using 'rpcallowip'](https://en.bitcoin.it/wiki/Running_Bitcoin).
+Make sure that monetaryunitd is configured to [accept incoming connections using 'rpcallowip'](https://en.bitcoin.it/wiki/Running_Bitcoin).
 
 In case the network is changed (testnet to livenet or vice versa) levelDB database needs to be deleted. This can be performed running:
 ```util/sync.js -D``` and waiting for *insight* to synchronize again.  Once the database is deleted, the sync.js process can be safely interrupted (CTRL+C) and continued from the synchronization process embedded in main app.
 
 ## Synchronization
 
-The initial synchronization process scans the blockchain from the paired bitcoind server to update addresses and balances. *insight-api* needs exactly one trusted bitcoind node to run. This node must have finished downloading the blockchain before running *insight-api*.
+The initial synchronization process scans the blockchain from the paired monetaryunitd server to update addresses and balances. *insight-api* needs exactly one trusted monetaryunitd node to run. This node must have finished downloading the blockchain before running *insight-api*.
 
 While *insight* is synchronizing the website can be accessed (the sync process is embedded in the webserver), but there may be missing data or incorrect balances for addresses. The 'sync' status is shown at the `/api/sync` endpoint.
 
-The blockchain can be read from bitcoind's raw `.dat` files or RPC interface. 
+The blockchain can be read from monetaryunitd's raw `.dat` files or RPC interface. 
 Reading the information from the `.dat` files is much faster so it's the
 recommended (and default) alternative. `.dat` files are scanned in the default
 location for each platform (for example, `~/.bitcoin` on Linux). In case a
@@ -105,13 +114,13 @@ As of June 2014, using `.dat` files the sync process takes 9 hrs.
 for livenet and 30 mins. for testnet.
 
 While synchronizing the blockchain, *insight-api* listens for new blocks and
-transactions relayed by the bitcoind node. Those are also stored on *insight-api*'s database.
+transactions relayed by the monetaryunitd node. Those are also stored on *insight-api*'s database.
 In case *insight-api* is shutdown for a period of time, restarting it will trigger
 a partial (historic) synchronization of the blockchain. Depending on the size of
 that synchronization task, a reverse RPC or forward `.dat` syncing strategy will be used.
 
-If bitcoind is shutdown, *insight-api* needs to be stopped and restarted
-once bitcoind is restarted.
+If monetaryunitd is shutdown, *insight-api* needs to be stopped and restarted
+once monetaryunitd is restarted.
 
 ### Syncing old blockchain data manually
 
