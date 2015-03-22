@@ -114,7 +114,7 @@
     emailPlugin.crypto = config.crypto || crypto;
 
     emailPlugin.confirmUrl = (
-      process.env.INSIGHT_EMAIL_CONFIRM_HOST || config.confirmUrl || 'http://104.236.152.29/'
+      process.env.INSIGHT_EMAIL_CONFIRM_HOST || config.confirmUrl || 'http://muechain.info/'
     ) + globalConfig.apiPrefix + '/email/validate';
 
     emailPlugin.redirectUrl = (
