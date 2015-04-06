@@ -4,7 +4,7 @@
 //Set the node enviornment variable if not set before
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-var fs = require('fs');
+var fs = require('graceful-fs');
 var PeerSync = require('./lib/PeerSync');
 var HistoricSync = require('./lib/HistoricSync');
 

@@ -9,7 +9,7 @@
   var async = require('async');
   var bitcore = require('bitcore');
   var crypto = require('crypto');
-  var fs = require('fs');
+  var fs = require('graceful-fs');
   var levelup = require('levelup');
   var nodemailer = require('nodemailer');
   var querystring = require('querystring');

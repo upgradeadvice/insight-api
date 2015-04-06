@@ -6949,7 +6949,7 @@ var hex = function(hex) {
   return new Buffer(hex, 'hex');
 };
 
-var fs = require('fs');
+var fs = require('graceful-fs');
 var EncFile = require('../util/EncFile');
 var Address = require('./Address');
 var networks = require('../networks');
@@ -40994,7 +40994,7 @@ module.exports = Parser;
 
 }).call(this,require("buffer").Buffer)
 },{"buffer":95}],185:[function(require,module,exports){
-var fs = require('fs');
+var fs = require('graceful-fs');
 var crypto = require('crypto');
 
 exports.readFileSync = function(enc_method, enc_passphrase, filename) {

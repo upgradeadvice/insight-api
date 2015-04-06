@@ -1,7 +1,7 @@
 'use strict';
 
 var path = require('path');
-var fs = require('fs');
+var fs = require('graceful-fs');
 var mkdirp = require('mkdirp');
 
 var rootPath = path.normalize(__dirname + '/..'),
